@@ -207,84 +207,151 @@ export default function Index() {
       <section
         ref={heroRef}
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
-        style={{ paddingTop: 100 }}
       >
-        {/* Ambient glows */}
+        {/* ── HERO BACKGROUND: layered mesh ── */}
         <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute rounded-full"
-            style={{
-              width: 700, height: 700,
-              top: "10%", left: "-10%",
-              background: "radial-gradient(circle, rgba(26,110,255,0.13) 0%, transparent 70%)",
-              transform: `translateY(${scrollY * 0.12}px)`,
-            }}
-          />
-          <div
-            className="absolute rounded-full"
-            style={{
-              width: 600, height: 600,
-              top: "5%", right: "-8%",
-              background: "radial-gradient(circle, rgba(232,33,10,0.12) 0%, transparent 70%)",
-              transform: `translateY(${scrollY * 0.08}px)`,
-            }}
-          />
-          <div
-            className="absolute rounded-full"
-            style={{
-              width: 400, height: 400,
-              bottom: "10%", left: "40%",
-              background: "radial-gradient(circle, rgba(26,110,255,0.08) 0%, transparent 70%)",
-            }}
-          />
+          {/* Base dark */}
+          <div className="absolute inset-0" style={{ background: "#060608" }} />
+
+          {/* Red cone — top right */}
+          <div className="absolute" style={{
+            width: "70vw", height: "70vw",
+            top: "-20%", right: "-15%",
+            background: "conic-gradient(from 200deg at 60% 40%, rgba(232,33,10,0.55) 0deg, rgba(180,10,0,0.3) 40deg, transparent 100deg)",
+            filter: "blur(60px)",
+            transform: `translateY(${scrollY * 0.07}px)`,
+          }} />
+
+          {/* Blue cone — bottom left */}
+          <div className="absolute" style={{
+            width: "65vw", height: "65vw",
+            bottom: "-15%", left: "-10%",
+            background: "conic-gradient(from 20deg at 40% 60%, rgba(26,110,255,0.5) 0deg, rgba(0,60,200,0.25) 50deg, transparent 110deg)",
+            filter: "blur(55px)",
+            transform: `translateY(${scrollY * -0.05}px)`,
+          }} />
+
+          {/* Center soft glow */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(20,20,40,0.6) 0%, transparent 80%)",
+          }} />
+
+          {/* Diagonal stripe texture */}
+          <div className="absolute inset-0" style={{
+            backgroundImage: "repeating-linear-gradient(120deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 60px)",
+          }} />
+
+          {/* Top vignette */}
+          <div className="absolute inset-x-0 top-0 h-40" style={{
+            background: "linear-gradient(to bottom, rgba(6,6,8,0.9), transparent)",
+          }} />
+
+          {/* Bottom vignette */}
+          <div className="absolute inset-x-0 bottom-0 h-48" style={{
+            background: "linear-gradient(to top, rgba(6,6,8,1), transparent)",
+          }} />
         </div>
 
         {/* Floating particles */}
-        {[...Array(12)].map((_, i) => (
+        {[...Array(14)].map((_, i) => (
           <div
             key={i}
             className="absolute rounded-full pointer-events-none"
             style={{
-              width: i % 3 === 0 ? 6 : i % 3 === 1 ? 4 : 3,
-              height: i % 3 === 0 ? 6 : i % 3 === 1 ? 4 : 3,
-              left: `${10 + i * 7.5}%`,
-              top: `${15 + (i % 5) * 14}%`,
-              background: i % 2 === 0 ? "rgba(26,110,255,0.6)" : "rgba(232,33,10,0.6)",
-              animation: `float-particle ${3 + i * 0.4}s ease-in-out infinite`,
-              animationDelay: `${i * 0.3}s`,
+              width: i % 3 === 0 ? 7 : i % 3 === 1 ? 4 : 3,
+              height: i % 3 === 0 ? 7 : i % 3 === 1 ? 4 : 3,
+              left: `${8 + i * 6.5}%`,
+              top: `${12 + (i % 6) * 13}%`,
+              background: i % 2 === 0 ? "rgba(26,110,255,0.75)" : "rgba(232,33,10,0.75)",
+              boxShadow: i % 2 === 0 ? "0 0 8px rgba(26,110,255,0.8)" : "0 0 8px rgba(232,33,10,0.8)",
+              animation: `float-particle ${3.2 + i * 0.35}s ease-in-out infinite`,
+              animationDelay: `${i * 0.28}s`,
             }}
           />
         ))}
 
-        {/* Grid lines */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
-            `,
-            backgroundSize: "80px 80px",
-          }}
-        />
-
-        <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
-          {/* Eyebrow */}
-          <div className="reveal inline-flex items-center gap-2.5 mb-8 px-4 py-1.5 rounded-full text-xs tracking-widest uppercase font-syne font-semibold"
+        <div className="relative z-10 text-center max-w-6xl mx-auto px-6" style={{ paddingTop: 120 }}>
+          {/* Eyebrow pill */}
+          <div className="reveal inline-flex items-center gap-2.5 mb-10 px-4 py-1.5 rounded-full text-xs tracking-widest uppercase font-syne font-semibold"
             style={{ border: "1px solid rgba(26,110,255,0.35)", background: "rgba(26,110,255,0.07)", color: "#6AA3FF" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 pulse-ring inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full pulse-ring inline-block" style={{ background: "#6AA3FF" }} />
             Electrolyte Science Reimagined
           </div>
 
-          {/* Headline */}
-          <h1 className="reveal reveal-delay-1 font-cormorant text-[clamp(3.5rem,9vw,8rem)] leading-[0.92] font-light mb-6" style={{ letterSpacing: "-0.02em" }}>
-            <span className="text-red-gradient block">Melt.</span>
-            <span className="text-blue-gradient block">Morph.</span>
-            <span style={{ color: "rgba(240,237,232,0.9)" }} className="block">Perform.</span>
-          </h1>
+          {/* ── BIG BRAND TITLE ── */}
+          <div className="reveal reveal-delay-1 relative mb-4 select-none" style={{ lineHeight: 0.88 }}>
+            {/* Ghost outline behind */}
+            <div
+              aria-hidden
+              className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+              style={{ zIndex: 0 }}
+            >
+              <span
+                className="block font-cormorant font-light"
+                style={{
+                  fontSize: "clamp(4.5rem, 13vw, 12rem)",
+                  letterSpacing: "-0.03em",
+                  WebkitTextStroke: "1px rgba(255,255,255,0.06)",
+                  color: "transparent",
+                  lineHeight: 0.9,
+                  userSelect: "none",
+                }}
+              >
+                MELT
+              </span>
+              <span
+                className="block font-cormorant font-light"
+                style={{
+                  fontSize: "clamp(4.5rem, 13vw, 12rem)",
+                  letterSpacing: "-0.03em",
+                  WebkitTextStroke: "1px rgba(255,255,255,0.06)",
+                  color: "transparent",
+                  lineHeight: 0.9,
+                  userSelect: "none",
+                }}
+              >
+                MORPHERS
+              </span>
+            </div>
 
-          <p className="reveal reveal-delay-2 text-white/50 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-12 font-syne font-light">
-            The world's first instant-dissolve electrolyte crystal — engineered at the ionic level for athletes who refuse to wait.
+            {/* Actual title — split coloring */}
+            <h1 style={{ position: "relative", zIndex: 1 }}>
+              <span
+                className="block font-cormorant font-semibold"
+                style={{
+                  fontSize: "clamp(4.5rem, 13vw, 12rem)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 0.9,
+                  background: "linear-gradient(135deg, #FF6B5A 0%, #E8210A 45%, #AA1200 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  filter: "drop-shadow(0 0 40px rgba(232,33,10,0.45))",
+                }}
+              >
+                MELT
+              </span>
+              <span
+                className="block font-cormorant font-semibold"
+                style={{
+                  fontSize: "clamp(4.5rem, 13vw, 12rem)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 0.9,
+                  background: "linear-gradient(135deg, #7AB5FF 0%, #1A6EFF 50%, #003ECC 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  filter: "drop-shadow(0 0 40px rgba(26,110,255,0.45))",
+                }}
+              >
+                MORPHERS
+              </span>
+            </h1>
+          </div>
+
+          {/* Subline */}
+          <p className="reveal reveal-delay-2 font-cormorant italic text-white/45 text-[clamp(1.1rem,2.5vw,1.7rem)] mb-12" style={{ letterSpacing: "0.01em" }}>
+            The instant-dissolve electrolyte crystal for athletes who refuse to wait.
           </p>
 
           <div className="reveal reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -296,7 +363,7 @@ export default function Index() {
             </button>
           </div>
 
-          {/* Hero stats strip */}
+          {/* Stats strip */}
           <div className="reveal reveal-delay-4 mt-20 flex flex-wrap items-center justify-center gap-x-12 gap-y-5">
             {[
               { val: "8s", label: "Dissolve time" },
