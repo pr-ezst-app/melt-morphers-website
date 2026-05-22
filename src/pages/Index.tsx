@@ -1111,6 +1111,75 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── FOUNDER ── */}
+      <section className="py-32 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-block text-xs tracking-widest uppercase font-syne font-semibold mb-4 px-3 py-1 rounded-full"
+              style={{ border: "1px solid rgba(232,33,10,0.3)", color: "#FF6B5A", background: "rgba(232,33,10,0.06)" }}>
+              The Founder
+            </div>
+            <h2 className="font-cormorant text-[clamp(2.5rem,5vw,5rem)] font-light text-white">
+              Built by an <em className="text-red-gradient not-italic">athlete</em>,<br />for athletes.
+            </h2>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-12 glass-card rounded-3xl p-10 md:p-14"
+            style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+
+            {/* Photo */}
+            <div className="flex-shrink-0 relative">
+              <div
+                className="w-52 h-52 rounded-2xl overflow-hidden flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, rgba(232,33,10,0.15), rgba(26,110,255,0.15))",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: "0 0 60px rgba(232,33,10,0.15), 0 0 60px rgba(26,110,255,0.1)",
+                }}
+              >
+                {/* REPLACE the src below with your photo URL */}
+                <img
+                  src="https://placehold.co/208x208/0F0F11/444?text=Your+Photo"
+                  alt="Founder"
+                  className="w-full h-full object-cover"
+                  onError={e => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center text-5xl pointer-events-none">
+                  🧬
+                </div>
+              </div>
+              {/* Red + blue accent dots */}
+              <div className="absolute -bottom-3 -right-3 w-7 h-7 rounded-full" style={{ background: "#E8210A", boxShadow: "0 0 16px rgba(232,33,10,0.6)" }} />
+              <div className="absolute -top-3 -left-3 w-5 h-5 rounded-full" style={{ background: "#1A6EFF", boxShadow: "0 0 12px rgba(26,110,255,0.6)" }} />
+            </div>
+
+            {/* Bio */}
+            <div className="flex-1 text-center md:text-left">
+              <div className="text-xs tracking-widest uppercase font-syne font-semibold mb-1" style={{ color: "#E8210A" }}>Founder & CEO</div>
+              <h3 className="font-cormorant text-4xl font-semibold text-white mb-1">Your Name</h3>
+              <div className="text-white/35 font-syne text-sm italic mb-6">Melt Morphers</div>
+
+              <p className="text-white/50 font-syne text-sm leading-loose mb-6">
+                "I created Melt Morphers after years of frustration with clumpy, slow-dissolving electrolyte powders during competition. I wanted something that worked as fast as I needed to — so I built it. Every sachet is a product of obsession with performance, not just marketing."
+              </p>
+
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                {["Athlete", "Entrepreneur", "Biohacker"].map((tag, i) => (
+                  <span key={tag} className="px-4 py-1.5 rounded-full text-xs font-syne font-semibold tracking-wide"
+                    style={{
+                      background: i % 2 === 0 ? "rgba(232,33,10,0.08)" : "rgba(26,110,255,0.08)",
+                      color: i % 2 === 0 ? "#FF6B5A" : "#6AA3FF",
+                      border: `1px solid ${i % 2 === 0 ? "rgba(232,33,10,0.2)" : "rgba(26,110,255,0.2)"}`,
+                    }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── FOOTER ── */}
       <footer className="py-12 px-6" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-white/25 text-xs font-syne tracking-wide">
