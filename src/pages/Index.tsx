@@ -941,6 +941,95 @@ export default function Index() {
 
 
 
+      {/* ── DROPSHIPPING ── */}
+      <section className="py-32 px-6" style={{ background: "rgba(255,255,255,0.012)" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="inline-block text-xs tracking-widest uppercase font-syne font-semibold mb-4 px-3 py-1 rounded-full"
+              style={{ border: "1px solid rgba(26,110,255,0.3)", color: "#6AA3FF", background: "rgba(26,110,255,0.06)" }}>
+              How It Ships
+            </div>
+            <h2 className="font-cormorant text-[clamp(2.5rem,5vw,5rem)] font-light text-white">
+              Order today. <em className="text-blue-gradient not-italic">Delivered</em> to your door.
+            </h2>
+            <p className="text-white/40 mt-4 max-w-lg mx-auto text-sm font-syne leading-relaxed">
+              No warehouse. No middleman. Your order goes straight from our fulfillment partner to you — fast, tracked, and guaranteed.
+            </p>
+          </div>
+
+          {/* Steps */}
+          <div className="relative">
+            {/* Connector line */}
+            <div className="hidden md:block absolute top-10 left-0 right-0 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(26,110,255,0.3) 20%, rgba(232,33,10,0.3) 80%, transparent)" }} />
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              {[
+                { icon: "ShoppingCart", step: "01", label: "You Order", desc: "Place your order securely on our site. Payment processed instantly.", color: "#1A6EFF" },
+                { icon: "Warehouse", step: "02", label: "We Notify", desc: "Your order is sent automatically to our fulfillment partner within minutes.", color: "#E8210A" },
+                { icon: "Package", step: "03", label: "They Pack", desc: "Your Melt Morphers are picked, packed and labelled with your name.", color: "#1A6EFF" },
+                { icon: "Truck", step: "04", label: "You Receive", desc: "Delivered to your door in 3–7 business days with full tracking.", color: "#E8210A" },
+              ].map((s, i) => (
+                <div key={i} className="flex flex-col items-center text-center gap-4 relative">
+                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center z-10"
+                    style={{ background: `${s.color}12`, border: `1px solid ${s.color}30`, boxShadow: `0 0 30px ${s.color}18` }}>
+                    <Icon name={s.icon} size={28} style={{ color: s.color }} />
+                  </div>
+                  <div className="font-syne font-bold text-xs tracking-widest uppercase" style={{ color: s.color }}>{s.step}</div>
+                  <div className="font-cormorant text-xl font-semibold text-white">{s.label}</div>
+                  <div className="text-white/40 text-xs font-syne leading-relaxed max-w-[180px]">{s.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Perks row */}
+          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-5">
+            {[
+              { icon: "MapPin", label: "Full Tracking", desc: "Live updates from warehouse to doorstep", color: "#1A6EFF" },
+              { icon: "RefreshCw", label: "Free Returns", desc: "30-day no-questions-asked return policy", color: "#E8210A" },
+              { icon: "Globe", label: "Ships Worldwide", desc: "Delivered to 40+ countries", color: "#1A6EFF" },
+              { icon: "Zap", label: "Fast Dispatch", desc: "Orders processed within 24 hours", color: "#E8210A" },
+            ].map((p, i) => (
+              <div key={i} className="glass-card rounded-2xl p-6 flex flex-col gap-3"
+                style={{ border: `1px solid ${p.color}18` }}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ background: `${p.color}12` }}>
+                  <Icon name={p.icon} size={18} style={{ color: p.color }} />
+                </div>
+                <div className="font-syne font-bold text-white text-sm">{p.label}</div>
+                <div className="text-white/35 text-xs font-syne leading-relaxed">{p.desc}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Delivery estimate banner */}
+          <div className="mt-10 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+            style={{ background: "linear-gradient(135deg, rgba(26,110,255,0.07) 0%, rgba(232,33,10,0.07) 100%)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div className="flex items-center gap-5">
+              <div className="text-4xl">📦</div>
+              <div>
+                <div className="font-cormorant text-2xl font-semibold text-white">Estimated Delivery</div>
+                <div className="text-white/40 text-sm font-syne mt-0.5">Based on your region</div>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              {[
+                { region: "🇺🇸 USA", days: "3–5 days" },
+                { region: "🇬🇧 UK / EU", days: "5–8 days" },
+                { region: "🌏 Rest of World", days: "7–14 days" },
+              ].map(d => (
+                <div key={d.region} className="text-center px-5 py-3 rounded-xl"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="text-white font-syne font-bold text-sm">{d.days}</div>
+                  <div className="text-white/35 text-xs font-syne mt-0.5">{d.region}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── FOOTER ── */}
       <footer className="py-12 px-6" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-white/25 text-xs font-syne tracking-wide">
