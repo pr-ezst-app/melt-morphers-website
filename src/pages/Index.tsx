@@ -164,8 +164,186 @@ function StatCard({ stat, icon, label, desc, color, index }: {
   );
 }
 
-function goToSite() {
-  window.open(window.location.href, "_blank");
+const COUNTRIES = ["United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Japan", "Other"];
+
+function PreOrderModal({ onClose }: { onClose: () => void }) {
+  const [qty, setQty] = useState(1);
+  const [country, setCountry] = useState("United States");
+  const [zip, setZip] = useState("");
+  const [step, setStep] = useState<"cart" | "shipping" | "done">("cart");
+
+  const unitPrice = 34;
+  const shipping = country === "United States" ? (qty >= 2 ? 0 : 4.99) : 9.99;
+  const total = unitPrice * qty + shipping;
+
+  return (
+    <div
+      className="fixed inset-0 z-[999] flex items-center justify-center px-4"
+      style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        className="relative w-full max-w-md rounded-2xl p-8"
+        style={{ background: "#0F0F11", border: "1px solid rgba(255,255,255,0.09)" }}
+      >
+        {/* Close */}
+        <button onClick={onClose} className="absolute top-5 right-5 text-white/30 hover:text-white/70 transition-colors">
+          <Icon name="X" size={18} />
+        </button>
+
+        {/* Demo badge */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-syne font-semibold mb-6 tracking-widest"
+          style={{ background: "rgba(232,33,10,0.1)", color: "#FF6B5A", border: "1px solid rgba(232,33,10,0.25)" }}>
+          ✦ DEMO — not a real checkout
+        </div>
+
+        {step === "cart" && (
+          <>
+            <h3 className="font-cormorant text-3xl font-semibold text-white mb-1">Your Order</h3>
+            <p className="text-white/35 text-xs font-syne mb-7">Melt Morphers — 30 sachets per box</p>
+
+            {/* Product row */}
+            <div className="flex items-center gap-4 mb-8 pb-6" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl flex-shrink-0"
+                style={{ background: "rgba(232,33,10,0.1)", border: "1px solid rgba(232,33,10,0.2)" }}>
+                🧬
+              </div>
+              <div className="flex-1">
+                <div className="font-syne font-bold text-white text-sm">Melt Morphers Starter Pack</div>
+                <div className="text-white/40 text-xs font-syne mt-0.5">All 4 flavors · 30 sachets</div>
+              </div>
+              <div className="font-syne font-bold text-white">${unitPrice}</div>
+            </div>
+
+            {/* Quantity */}
+            <div className="mb-6">
+              <label className="text-xs font-syne font-semibold tracking-widest uppercase text-white/45 block mb-3">Quantity</label>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setQty(q => Math.max(1, q - 1))}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  <Icon name="Minus" size={14} />
+                </button>
+                <span className="font-syne font-bold text-white text-xl w-6 text-center">{qty}</span>
+                <button
+                  onClick={() => setQty(q => Math.min(10, q + 1))}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                >
+                  <Icon name="Plus" size={14} />
+                </button>
+                {qty >= 2 && country === "United States" && (
+                  <span className="text-xs font-syne px-2 py-1 rounded-full" style={{ background: "rgba(26,110,255,0.1)", color: "#6AA3FF" }}>
+                    Free shipping!
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Order summary */}
+            <div className="rounded-xl p-4 mb-6 space-y-2" style={{ background: "rgba(255,255,255,0.03)" }}>
+              <div className="flex justify-between text-sm font-syne text-white/50">
+                <span>Subtotal</span><span>${(unitPrice * qty).toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm font-syne text-white/50">
+                <span>Shipping</span><span className="text-white/50">(calculated next)</span>
+              </div>
+              <div className="flex justify-between text-sm font-syne font-bold text-white pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <span>Estimated Total</span><span style={{ color: "#E8210A" }}>${(unitPrice * qty).toFixed(2)}+</span>
+              </div>
+            </div>
+
+            <button onClick={() => setStep("shipping")} className="btn-red w-full py-4 rounded-xl text-sm font-syne font-bold tracking-widest">
+              Continue to Shipping →
+            </button>
+          </>
+        )}
+
+        {step === "shipping" && (
+          <>
+            <button onClick={() => setStep("cart")} className="flex items-center gap-1.5 text-white/35 text-xs font-syne hover:text-white/60 transition-colors mb-6">
+              <Icon name="ChevronLeft" size={13} /> Back
+            </button>
+            <h3 className="font-cormorant text-3xl font-semibold text-white mb-1">Shipping</h3>
+            <p className="text-white/35 text-xs font-syne mb-7">Where should we send your order?</p>
+
+            <div className="space-y-4 mb-6">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-syne text-white/40 uppercase tracking-widest block mb-1.5">First name</label>
+                  <input className="modal-input w-full" placeholder="John" />
+                </div>
+                <div>
+                  <label className="text-xs font-syne text-white/40 uppercase tracking-widest block mb-1.5">Last name</label>
+                  <input className="modal-input w-full" placeholder="Doe" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-syne text-white/40 uppercase tracking-widest block mb-1.5">Address</label>
+                <input className="modal-input w-full" placeholder="123 Main St" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-syne text-white/40 uppercase tracking-widest block mb-1.5">City</label>
+                  <input className="modal-input w-full" placeholder="New York" />
+                </div>
+                <div>
+                  <label className="text-xs font-syne text-white/40 uppercase tracking-widest block mb-1.5">ZIP</label>
+                  <input className="modal-input w-full" placeholder="10001" value={zip} onChange={e => setZip(e.target.value)} />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-syne text-white/40 uppercase tracking-widest block mb-1.5">Country</label>
+                <select
+                  value={country}
+                  onChange={e => setCountry(e.target.value)}
+                  className="modal-input w-full"
+                  style={{ appearance: "none" }}
+                >
+                  {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+
+            {/* Shipping summary */}
+            <div className="rounded-xl p-4 mb-6 space-y-2" style={{ background: "rgba(255,255,255,0.03)" }}>
+              <div className="flex justify-between text-sm font-syne text-white/50">
+                <span>Subtotal ({qty} box{qty > 1 ? "es" : ""})</span><span>${(unitPrice * qty).toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm font-syne text-white/50">
+                <span>Shipping to {country}</span>
+                <span style={{ color: shipping === 0 ? "#6AA3FF" : undefined }}>
+                  {shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm font-syne font-bold text-white pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <span>Total</span><span style={{ color: "#E8210A" }}>${total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <button onClick={() => setStep("done")} className="btn-red w-full py-4 rounded-xl text-sm font-syne font-bold tracking-widest">
+              Place Pre-Order →
+            </button>
+          </>
+        )}
+
+        {step === "done" && (
+          <div className="text-center py-6">
+            <div className="text-5xl mb-5">🎉</div>
+            <h3 className="font-cormorant text-3xl font-semibold text-white mb-2">Order Placed!</h3>
+            <p className="text-white/40 text-sm font-syne leading-relaxed mb-8 max-w-xs mx-auto">
+              This is a demo — no real charge was made. When we launch, you'll be the first to know.
+            </p>
+            <button onClick={onClose} className="btn-outline-blue px-8 py-3 rounded-xl text-sm font-syne font-semibold tracking-widest">
+              Close
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function Index() {
@@ -173,7 +351,7 @@ export default function Index() {
   const flavor = FLAVORS[activeFlavor];
   const heroRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
-
+  const [showOrder, setShowOrder] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -183,6 +361,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen" style={{ background: "#080808", color: "#F0EDE8" }}>
+      {showOrder && <PreOrderModal onClose={() => setShowOrder(false)} />}
 
       {/* ── NAV ── */}
       <nav
@@ -203,7 +382,7 @@ export default function Index() {
           <a href="#flavors" className="hover:text-white transition-colors">Flavors</a>
           <a href="#features" className="hover:text-white transition-colors">Features</a>
         </div>
-        <button onClick={goToSite} className="btn-red text-xs px-6 py-2.5 rounded-lg tracking-widest">
+        <button onClick={() => setShowOrder(true)} className="btn-red text-xs px-6 py-2.5 rounded-lg tracking-widest">
           Pre-Order
         </button>
       </nav>
@@ -360,7 +539,7 @@ export default function Index() {
           </p>
 
           <div className="reveal reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button onClick={goToSite} className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
+            <button onClick={() => setShowOrder(true)} className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
               Pre-Order Now — $34
             </button>
             <button onClick={goToSite} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
@@ -593,7 +772,7 @@ export default function Index() {
               ))}
             </div>
 
-            <button onClick={goToSite} className="px-8 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest uppercase text-white"
+            <button onClick={() => setShowOrder(true)} className="px-8 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest uppercase text-white"
               style={{ background: flavor.color, boxShadow: `0 0 30px ${flavor.glow}` }}>
               Add to Pre-Order
             </button>
