@@ -542,7 +542,7 @@ export default function Index() {
             <button onClick={() => setShowOrder(true)} className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
               Pre-Order Now — $34
             </button>
-            <button onClick={goToSite} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
+            <button onClick={() => setShowOrder(true)} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
               Watch It Dissolve ▶
             </button>
           </div>
