@@ -164,8 +164,8 @@ function StatCard({ stat, icon, label, desc, color, index }: {
   );
 }
 
-function scrollToSignup() {
-  document.getElementById("signup")?.scrollIntoView({ behavior: "smooth" });
+function goToSite() {
+  window.open("https://meltmorphers.com", "_blank");
 }
 
 export default function Index() {
@@ -215,7 +215,7 @@ export default function Index() {
           <a href="#flavors" className="hover:text-white transition-colors">Flavors</a>
           <a href="#features" className="hover:text-white transition-colors">Features</a>
         </div>
-        <button onClick={scrollToSignup} className="btn-red text-xs px-6 py-2.5 rounded-lg tracking-widest">
+        <button onClick={goToSite} className="btn-red text-xs px-6 py-2.5 rounded-lg tracking-widest">
           Pre-Order
         </button>
       </nav>
@@ -372,10 +372,10 @@ export default function Index() {
           </p>
 
           <div className="reveal reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button onClick={scrollToSignup} className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
+            <button onClick={goToSite} className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
               Pre-Order Now — $34
             </button>
-            <button onClick={scrollToSignup} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
+            <button onClick={goToSite} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
               Watch It Dissolve ▶
             </button>
           </div>
@@ -605,7 +605,7 @@ export default function Index() {
               ))}
             </div>
 
-            <button onClick={scrollToSignup} className="px-8 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest uppercase text-white"
+            <button onClick={goToSite} className="px-8 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest uppercase text-white"
               style={{ background: flavor.color, boxShadow: `0 0 30px ${flavor.glow}` }}>
               Add to Pre-Order
             </button>
