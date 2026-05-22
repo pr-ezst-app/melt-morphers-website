@@ -164,6 +164,163 @@ function StatCard({ stat, icon, label, desc, color, index }: {
   );
 }
 
+function DissolveModal({ onClose }: { onClose: () => void }) {
+  const [phase, setPhase] = useState<"idle" | "dropping" | "dissolving" | "done">("idle");
+  const [particles, setParticles] = useState<{ id: number; x: number; size: number; color: string; delay: number }[]>([]);
+
+  function startDissolve() {
+    setPhase("dropping");
+    setTimeout(() => setPhase("dissolving"), 900);
+    setTimeout(() => {
+      setPhase("done");
+      setParticles(
+        Array.from({ length: 28 }, (_, i) => ({
+          id: i,
+          x: 20 + Math.random() * 60,
+          size: 4 + Math.random() * 8,
+          color: i % 2 === 0 ? "#1A6EFF" : "#E8210A",
+          delay: Math.random() * 0.6,
+        }))
+      );
+    }, 2800);
+  }
+
+  function reset() {
+    setPhase("idle");
+    setParticles([]);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[999] flex items-center justify-center px-4"
+      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)" }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        className="relative w-full max-w-sm rounded-2xl p-8 text-center overflow-hidden"
+        style={{ background: "#0A0A0C", border: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        <button onClick={onClose} className="absolute top-5 right-5 text-white/30 hover:text-white/60 transition-colors">
+          <Icon name="X" size={18} />
+        </button>
+
+        <div className="text-xs font-syne font-semibold tracking-widest uppercase mb-5 px-3 py-1 rounded-full inline-block"
+          style={{ background: "rgba(26,110,255,0.08)", color: "#6AA3FF", border: "1px solid rgba(26,110,255,0.2)" }}>
+          Melt-Tech™ Crystal
+        </div>
+
+        {/* Glass of water */}
+        <div className="relative mx-auto mb-8" style={{ width: 130, height: 170 }}>
+          {/* Glass body */}
+          <div className="absolute inset-0 rounded-b-2xl overflow-hidden"
+            style={{ border: "2px solid rgba(255,255,255,0.15)", borderTop: "none", background: "rgba(26,110,255,0.04)" }}>
+
+            {/* Water fill */}
+            <div
+              className="absolute bottom-0 left-0 right-0 rounded-b-2xl"
+              style={{
+                height: phase === "idle" ? "55%" : phase === "dropping" ? "55%" : "65%",
+                background: phase === "done"
+                  ? "linear-gradient(180deg, rgba(26,110,255,0.35) 0%, rgba(26,110,255,0.55) 100%)"
+                  : "linear-gradient(180deg, rgba(26,110,255,0.15) 0%, rgba(26,110,255,0.3) 100%)",
+                transition: "height 1.2s ease, background 1s ease",
+              }}
+            />
+
+            {/* Dissolve ripples */}
+            {phase === "dissolving" && (
+              <>
+                {[0, 1, 2].map(i => (
+                  <div key={i} className="absolute rounded-full"
+                    style={{
+                      width: 60 + i * 20, height: 60 + i * 20,
+                      left: "50%", top: "35%",
+                      transform: "translate(-50%, -50%)",
+                      border: `1px solid rgba(26,110,255,${0.5 - i * 0.12})`,
+                      animation: `ripple-out 1.2s ease-out ${i * 0.28}s infinite`,
+                    }}
+                  />
+                ))}
+              </>
+            )}
+
+            {/* Done sparkles */}
+            {phase === "done" && particles.map(p => (
+              <div key={p.id} className="absolute rounded-full"
+                style={{
+                  width: p.size, height: p.size,
+                  left: `${p.x}%`,
+                  bottom: "45%",
+                  background: p.color,
+                  boxShadow: `0 0 6px ${p.color}`,
+                  animation: `sparkle-rise 1.4s ease-out ${p.delay}s both`,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Glass rim */}
+          <div className="absolute top-0 left-0 right-0 h-3 rounded-t-sm"
+            style={{ background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.15)", borderBottom: "none" }} />
+
+          {/* Crystal / sachet */}
+          {phase === "idle" && (
+            <div
+              className="absolute -top-10 left-1/2 -translate-x-1/2 w-8 h-8 rounded-lg flex items-center justify-center text-lg"
+              style={{ background: "linear-gradient(135deg, rgba(232,33,10,0.8), rgba(26,110,255,0.8))", boxShadow: "0 0 20px rgba(232,33,10,0.4)" }}
+            >
+              ✦
+            </div>
+          )}
+
+          {phase === "dropping" && (
+            <div
+              className="absolute left-1/2 -translate-x-1/2 w-8 h-8 rounded-lg flex items-center justify-center text-lg"
+              style={{
+                background: "linear-gradient(135deg, rgba(232,33,10,0.8), rgba(26,110,255,0.8))",
+                boxShadow: "0 0 20px rgba(232,33,10,0.4)",
+                animation: "crystal-drop 0.8s cubic-bezier(0.5, 0, 1, 1) forwards",
+              }}
+            >
+              ✦
+            </div>
+          )}
+        </div>
+
+        {/* Label */}
+        <div className="font-cormorant text-2xl font-semibold text-white mb-1">
+          {phase === "idle" && "Ready to dissolve"}
+          {phase === "dropping" && "Dropping in…"}
+          {phase === "dissolving" && "Melting…"}
+          {phase === "done" && "Fully dissolved! ⚡"}
+        </div>
+        <p className="text-white/35 text-xs font-syne mb-7">
+          {phase === "idle" && "Melt-Tech™ crystal — 8 second dissolve"}
+          {phase === "dropping" && "Watch it hit the water"}
+          {phase === "dissolving" && "Ionic bonds breaking down…"}
+          {phase === "done" && "5 electrolytes, instantly bioavailable"}
+        </p>
+
+        {phase === "idle" && (
+          <button onClick={startDissolve} className="btn-red px-8 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest w-full">
+            Drop It In ▶
+          </button>
+        )}
+        {phase === "done" && (
+          <div className="flex gap-3">
+            <button onClick={reset} className="btn-outline-blue flex-1 py-3.5 rounded-xl text-sm font-syne font-semibold tracking-widest">
+              Again ↺
+            </button>
+            <button onClick={onClose} className="btn-red flex-1 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest">
+              Nice!
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 const COUNTRIES = ["United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Japan", "Other"];
 
 function PreOrderModal({ onClose }: { onClose: () => void }) {
@@ -352,6 +509,7 @@ export default function Index() {
   const heroRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
   const [showOrder, setShowOrder] = useState(false);
+  const [showDissolve, setShowDissolve] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -362,6 +520,7 @@ export default function Index() {
   return (
     <div className="min-h-screen" style={{ background: "#080808", color: "#F0EDE8" }}>
       {showOrder && <PreOrderModal onClose={() => setShowOrder(false)} />}
+      {showDissolve && <DissolveModal onClose={() => setShowDissolve(false)} />}
 
       {/* ── NAV ── */}
       <nav
@@ -542,7 +701,7 @@ export default function Index() {
             <button onClick={() => setShowOrder(true)} className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
               Pre-Order Now — $34
             </button>
-            <button onClick={() => setShowOrder(true)} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
+            <button onClick={() => setShowDissolve(true)} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
               Watch It Dissolve ▶
             </button>
           </div>
