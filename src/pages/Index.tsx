@@ -164,11 +164,28 @@ function StatCard({ stat, icon, label, desc, color, index }: {
   );
 }
 
+function scrollToSignup() {
+  document.getElementById("signup")?.scrollIntoView({ behavior: "smooth" });
+}
+
 export default function Index() {
   const [activeFlavor, setActiveFlavor] = useState(0);
   const flavor = FLAVORS[activeFlavor];
   const heroRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  function handleSignup(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSubmitted(true);
+    }, 900);
+  }
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -198,7 +215,7 @@ export default function Index() {
           <a href="#flavors" className="hover:text-white transition-colors">Flavors</a>
           <a href="#features" className="hover:text-white transition-colors">Features</a>
         </div>
-        <button className="btn-red text-xs px-6 py-2.5 rounded-lg tracking-widest">
+        <button onClick={scrollToSignup} className="btn-red text-xs px-6 py-2.5 rounded-lg tracking-widest">
           Pre-Order
         </button>
       </nav>
@@ -355,10 +372,10 @@ export default function Index() {
           </p>
 
           <div className="reveal reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
+            <button onClick={scrollToSignup} className="btn-red w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-bold">
               Pre-Order Now — $34
             </button>
-            <button className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
+            <button onClick={scrollToSignup} className="btn-outline-blue w-full sm:w-auto px-10 py-4 rounded-xl text-sm tracking-widest font-syne font-semibold">
               Watch It Dissolve ▶
             </button>
           </div>
@@ -588,7 +605,7 @@ export default function Index() {
               ))}
             </div>
 
-            <button className="px-8 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest uppercase text-white"
+            <button onClick={scrollToSignup} className="px-8 py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest uppercase text-white"
               style={{ background: flavor.color, boxShadow: `0 0 30px ${flavor.glow}` }}>
               Add to Pre-Order
             </button>
@@ -596,34 +613,64 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="py-32 px-6 relative overflow-hidden">
+      {/* ── SIGNUP / CTA ── */}
+      <section id="signup" className="py-32 px-6 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(26,110,255,0.1) 0%, transparent 60%)" }} />
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 70% 50%, rgba(232,33,10,0.1) 0%, transparent 60%)" }} />
         </div>
 
-        <div className="relative max-w-3xl mx-auto text-center">
-          <h2 className="font-cormorant text-[clamp(3rem,6vw,6rem)] font-light leading-tight mb-6 text-white">
+        <div className="relative max-w-2xl mx-auto text-center">
+          <h2 className="font-cormorant text-[clamp(3rem,6vw,6rem)] font-light leading-tight mb-4 text-white">
             Ready to <em className="text-red-gradient not-italic">melt</em> your <em className="text-blue-gradient not-italic">limits</em>?
           </h2>
-          <p className="text-white/45 text-base font-syne mb-12 max-w-md mx-auto">
-            Pre-order now and be first to experience the future of hydration. Shipping Q2 2025.
+          <p className="text-white/45 text-base font-syne mb-12 max-w-md mx-auto leading-relaxed">
+            Be first in line. Drop your email and we'll notify you the moment we launch — plus an exclusive early-bird discount.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <button className="btn-red px-12 py-4 rounded-xl text-sm font-syne font-bold tracking-widest w-full sm:w-auto">
-              Pre-Order — $34 / 30 sachets
-            </button>
-            <button className="btn-outline-blue px-10 py-4 rounded-xl text-sm font-syne font-semibold tracking-widest w-full sm:w-auto">
-              Learn the Science
-            </button>
-          </div>
+          {submitted ? (
+            <div
+              className="inline-flex flex-col items-center gap-3 px-10 py-8 rounded-2xl"
+              style={{ background: "rgba(26,110,255,0.08)", border: "1px solid rgba(26,110,255,0.3)" }}
+            >
+              <span className="text-4xl">🧬</span>
+              <div className="font-cormorant text-2xl text-white font-semibold">You're on the list!</div>
+              <div className="text-white/45 text-sm font-syne">We'll reach out before anyone else. Stay ready.</div>
+            </div>
+          ) : (
+            <form onSubmit={handleSignup} className="flex flex-col sm:flex-row items-center gap-3 max-w-lg mx-auto mb-10">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="flex-1 w-full px-5 py-4 rounded-xl text-sm font-syne text-white placeholder-white/25 outline-none focus:ring-2"
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  focusRingColor: "#1A6EFF",
+                  caretColor: "#1A6EFF",
+                }}
+                onFocus={e => (e.currentTarget.style.borderColor = "rgba(26,110,255,0.6)")}
+                onBlur={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-red w-full sm:w-auto px-8 py-4 rounded-xl text-sm font-syne font-bold tracking-widest whitespace-nowrap"
+                style={{ opacity: loading ? 0.7 : 1 }}
+              >
+                {loading ? "Joining…" : "Notify Me"}
+              </button>
+            </form>
+          )}
 
-          <div className="flex flex-wrap items-center justify-center gap-6 text-white/30 text-xs font-syne tracking-wide">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-white/30 text-xs font-syne tracking-wide mt-8">
             <span className="flex items-center gap-1.5"><Icon name="Shield" size={12} /> NSF Certified</span>
             <span className="flex items-center gap-1.5"><Icon name="Truck" size={12} /> Free shipping $60+</span>
             <span className="flex items-center gap-1.5"><Icon name="RotateCcw" size={12} /> 30-day guarantee</span>
+            <span className="flex items-center gap-1.5"><Icon name="Lock" size={12} /> No spam, ever</span>
           </div>
         </div>
       </section>
