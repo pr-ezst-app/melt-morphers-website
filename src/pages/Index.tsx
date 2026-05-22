@@ -323,6 +323,26 @@ function DissolveModal({ onClose }: { onClose: () => void }) {
 
 const COUNTRIES = ["United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Japan", "Other"];
 
+const DELIVERY_DAYS: Record<string, [number, number]> = {
+  "United States": [3, 5],
+  "Canada": [5, 7],
+  "United Kingdom": [5, 7],
+  "Australia": [7, 12],
+  "Germany": [5, 8],
+  "France": [5, 8],
+  "Japan": [7, 10],
+  "Other": [10, 14],
+};
+
+function getDeliveryRange(country: string): string {
+  const [min, max] = DELIVERY_DAYS[country] ?? [10, 14];
+  const today = new Date();
+  const minDate = new Date(today); minDate.setDate(today.getDate() + min + 1);
+  const maxDate = new Date(today); maxDate.setDate(today.getDate() + max + 1);
+  const fmt = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return `${fmt(minDate)} – ${fmt(maxDate)}`;
+}
+
 function PreOrderModal({ onClose }: { onClose: () => void }) {
   const [qty, setQty] = useState(1);
   const [country, setCountry] = useState("United States");
@@ -332,6 +352,8 @@ function PreOrderModal({ onClose }: { onClose: () => void }) {
   const unitPrice = 34;
   const shipping = country === "United States" ? (qty >= 2 ? 0 : 4.99) : 9.99;
   const total = unitPrice * qty + shipping;
+  const deliveryRange = getDeliveryRange(country);
+  const trackingNum = `MM${Math.floor(100000000 + Math.random() * 900000000)}US`;
 
   return (
     <div
@@ -480,6 +502,23 @@ function PreOrderModal({ onClose }: { onClose: () => void }) {
               </div>
             </div>
 
+            {/* Delivery estimate */}
+            <div className="rounded-xl p-4 mb-6 flex items-center gap-4"
+              style={{ background: "rgba(26,110,255,0.06)", border: "1px solid rgba(26,110,255,0.18)" }}>
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(26,110,255,0.12)" }}>
+                <Icon name="Truck" size={16} style={{ color: "#6AA3FF" }} />
+              </div>
+              <div>
+                <div className="text-xs font-syne text-white/40 uppercase tracking-widest">Estimated Delivery</div>
+                <div className="font-syne font-bold text-white text-sm mt-0.5">{deliveryRange}</div>
+              </div>
+              <div className="ml-auto text-right">
+                <div className="text-xs font-syne text-white/40 uppercase tracking-widest">Dispatch</div>
+                <div className="font-syne font-semibold text-white/70 text-xs mt-0.5">Within 24 hrs</div>
+              </div>
+            </div>
+
             <button onClick={() => setStep("done")} className="btn-red w-full py-4 rounded-xl text-sm font-syne font-bold tracking-widest">
               Place Pre-Order →
             </button>
@@ -487,14 +526,56 @@ function PreOrderModal({ onClose }: { onClose: () => void }) {
         )}
 
         {step === "done" && (
-          <div className="text-center py-6">
-            <div className="text-5xl mb-5">🎉</div>
-            <h3 className="font-cormorant text-3xl font-semibold text-white mb-2">Order Placed!</h3>
-            <p className="text-white/40 text-sm font-syne leading-relaxed mb-8 max-w-xs mx-auto">
-              This is a demo — no real charge was made. When we launch, you'll be the first to know.
-            </p>
-            <button onClick={onClose} className="btn-outline-blue px-8 py-3 rounded-xl text-sm font-syne font-semibold tracking-widest">
-              Close
+          <div className="py-4">
+            <div className="text-center mb-7">
+              <div className="text-5xl mb-4">🎉</div>
+              <h3 className="font-cormorant text-3xl font-semibold text-white mb-1">Order Confirmed!</h3>
+              <p className="text-white/35 text-xs font-syne">Demo only — no real charge was made</p>
+            </div>
+
+            {/* Order details */}
+            <div className="space-y-3 mb-6">
+              <div className="rounded-xl p-4 flex items-center gap-3"
+                style={{ background: "rgba(26,110,255,0.06)", border: "1px solid rgba(26,110,255,0.18)" }}>
+                <Icon name="Truck" size={16} style={{ color: "#6AA3FF" }} />
+                <div className="flex-1">
+                  <div className="text-xs font-syne text-white/40 uppercase tracking-widest">Estimated Delivery</div>
+                  <div className="font-syne font-bold text-white text-sm mt-0.5">{deliveryRange}</div>
+                </div>
+                <div className="text-xs font-syne px-2 py-1 rounded-full"
+                  style={{ background: "rgba(26,110,255,0.12)", color: "#6AA3FF" }}>
+                  {country}
+                </div>
+              </div>
+
+              <div className="rounded-xl p-4 flex items-center gap-3"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <Icon name="ScanLine" size={16} style={{ color: "#E8210A" }} />
+                <div className="flex-1">
+                  <div className="text-xs font-syne text-white/40 uppercase tracking-widest">Tracking Number</div>
+                  <div className="font-mono text-white text-xs mt-0.5 tracking-wider">{trackingNum}</div>
+                </div>
+                <div className="text-xs font-syne px-2 py-1 rounded-full"
+                  style={{ background: "rgba(232,33,10,0.1)", color: "#FF6B5A" }}>
+                  Pending
+                </div>
+              </div>
+
+              <div className="rounded-xl p-4 flex items-center justify-between"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div className="flex items-center gap-3">
+                  <Icon name="Package" size={16} style={{ color: "rgba(255,255,255,0.4)" }} />
+                  <div>
+                    <div className="text-xs font-syne text-white/40 uppercase tracking-widest">Order</div>
+                    <div className="font-syne text-white text-sm font-semibold mt-0.5">{qty} × Starter Pack</div>
+                  </div>
+                </div>
+                <div className="font-syne font-bold text-sm" style={{ color: "#E8210A" }}>${total.toFixed(2)}</div>
+              </div>
+            </div>
+
+            <button onClick={onClose} className="btn-red w-full py-3.5 rounded-xl text-sm font-syne font-bold tracking-widest">
+              Done
             </button>
           </div>
         )}
